@@ -1,1 +1,1 @@
-Corrected English-language collection pages. Joyner sections are fully written in English and link to English-language primary sources and Smithsonian materials, not the German article. Upload the five HTML files to the GitHub Pages repository root.
+Joyner patent illustration update: three patent drawing sheets are displayed on technology.html using Wikimedia Commons image URLs. Images require an internet connection. Other pages unchanged. Upload the HTML files to the repository root.
