@@ -1,1 +1,5 @@
-Hairdressing History — expanded technical systems research catalogue. Upload all five HTML files to the root of the existing GitHub Pages repository (or only technology.html, tools.html, pioneers.html, journals.html; index.html unchanged). Patent drawings are externally referenced and require an internet connection. Claims for Gallia, Szeemann, Suter, Calvete and Frederics are explicitly labelled as unverified research leads.
+International Hairdressing History Project — Six research subpages.
+Upload all .html files to the ROOT of the GitHub Pages repository armin-historik/hairdressing-history.
+New pages: origins-nessler.html, early-competing-systems.html, winding-techniques.html, machine-design.html, chemical-cold-wave.html, modern-digital-perm.html
+Updated: technology.html, development-tree.html. The other existing pages are included unchanged.
+IMPORTANT: New pages retain noindex,follow until you are ready to publish. Source gaps are deliberately identified; do not substitute unverified images.
