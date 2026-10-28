@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://hairdressing-history.org/sitemap.xml
+Sitemap: https://armin-historik.github.io/hairdressing-history/sitemap.xml
