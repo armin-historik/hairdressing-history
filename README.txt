@@ -1,5 +1,5 @@
-International Hairdressing History Project — Six research subpages.
-Upload all .html files to the ROOT of the GitHub Pages repository armin-historik/hairdressing-history.
-New pages: origins-nessler.html, early-competing-systems.html, winding-techniques.html, machine-design.html, chemical-cold-wave.html, modern-digital-perm.html
-Updated: technology.html, development-tree.html. The other existing pages are included unchanged.
-IMPORTANT: New pages retain noindex,follow until you are ready to publish. Source gaps are deliberately identified; do not substitute unverified images.
+INNOVATION ATLAS UPDATE
+
+Upload innovation-atlas.html, technology.html and development-tree.html to the repository root. Keep assets/josef-mayer-us1619794-1927.png in the existing assets folder; it is included in this ZIP for completeness. Other pages are included unchanged.
+
+The new atlas is intentionally noindex until ready for publication. The external patent link for Joyner is used rather than an unverified embedded image URL. Research gaps are marked explicitly.
