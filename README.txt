@@ -1,5 +1,1 @@
-PIONEERS & PEOPLE – curated update
-Upload only pioneers.html to the GitHub repository root, replacing the existing file.
-The homepage index.html, technology.html and assets folder are unchanged.
-The update adds a navigable profile directory, retains the existing biographies, pictures and sources, and moves the general collection overview below the profiles.
-Links to comparison and evidence register require those pages to be uploaded already.
+Upload only machine-design.html to the root of your GitHub repository and replace the existing file. Do not change index.html or the assets folder. This update expands machine-design research with engineering categories, the Joyner patent and a Mayer comparison. No external patent images are embedded without verified rights.
