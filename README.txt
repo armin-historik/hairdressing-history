@@ -1,1 +1,0 @@
-Upload only machine-design.html to the root of your GitHub repository and replace the existing file. Do not change index.html or the assets folder. This update expands machine-design research with engineering categories, the Joyner patent and a Mayer comparison. No external patent images are embedded without verified rights.
