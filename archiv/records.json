@@ -14,5 +14,21 @@
     "title_translated": true,
     "description_translated": true,
     "source_translated": true
+  },
+  {
+    "id": "GAL-1936-001",
+    "title": "Société Gallia – Historical Product Catalogue",
+    "date": "Date to be verified",
+    "categories": [
+      "Gallia"
+    ],
+    "source": "Société Gallia, Félix Boudou & Cie, Paris, 8 rue Notre-Dame-de-Lorette (9th arrondissement). Catalogue cover; digitised collection of the City of Paris specialised libraries, ARK pf0002154404. Publication date not independently verified.",
+    "description": "French-language catalogue cover for Société Gallia (Félix Boudou & Cie), featuring a stylised hairstyle illustration, the GALLIA brand and the slogan 'La Marque de la Qualité' ('The Mark of Quality'). The cover identifies the company's address at 8 rue Notre-Dame-de-Lorette, Paris. The publication date has not yet been verified from the catalogue record.",
+    "original_url": "https://bibliotheques-specialisees.paris.fr/ark:/73873/pf0002154404",
+    "language": "French",
+    "original_title": "Société Gallia – catalogue (title page)",
+    "title_translated": true,
+    "description_translated": true,
+    "source_translated": true
   }
 ]
