@@ -1,0 +1,113 @@
+
+name: Airtable Archive Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: airtable-archive-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch approved archive records
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import json
+          import urllib.request
+          import urllib.parse
+
+          base = "appQK6gnggCwfM7ze"
+          table = "tblR8HotH5nj1cSvW"
+          token = os.environ["AIRTABLE_TOKEN"]
+
+          api = (
+              f"https://api.airtable.com/v0/"
+              f"{base}/{table}"
+          )
+
+          records = []
+          offset = None
+
+          while True:
+              params = {
+                  "pageSize": 100,
+                  "filterByFormula": "{Metadaten öffentlich}=1"
+              }
+
+              if offset:
+                  params["offset"] = offset
+
+              url = api + "?" + urllib.parse.urlencode(params)
+
+              request = urllib.request.Request(
+                  url,
+                  headers={"Authorization": f"Bearer {token}"}
+              )
+
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  result = json.load(response)
+
+              for item in result.get("records", []):
+                  f = item.get("fields", {})
+
+                  record = {
+                      "id": f.get("Archiv-ID", ""),
+                      "title": f.get("Titel", ""),
+                      "date": f.get("Jahr / Datierung", ""),
+                      "categories": f.get("Forschungsbereiche", []),
+                      "source": f.get("Quelle / Herkunft", ""),
+                      "description": f.get("Beschreibung", ""),
+                      "original_url": f.get("Original-URL", "")
+                  }
+
+                  if (
+                      f.get("PDF öffentlich") is True
+                      and f.get("Öffentliche PDF-URL")
+                  ):
+                      record["pdf_url"] = f["Öffentliche PDF-URL"]
+
+                  records.append(record)
+
+              offset = result.get("offset")
+              if not offset:
+                  break
+
+          records.sort(key=lambda r: r["id"])
+
+          os.makedirs("archiv", exist_ok=True)
+
+          with open("archiv/records.json", "w", encoding="utf-8") as file:
+              json.dump(
+                  records,
+                  file,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          print(f"Exported {len(records)} approved records.")
+          PY
+
+      - name: Publish archive data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add archiv/records.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update public archive records"
+            git push
+          fi
