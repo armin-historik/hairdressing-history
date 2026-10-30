@@ -22,10 +22,21 @@
     .hero { background: linear-gradient(110deg, #30070d, #5b1019); color: white; padding: 75px 7%; }
     .hero h1 { font-family: Georgia, serif; font-size: clamp(30px, 5vw, 48px); }
     main { max-width: 1100px; margin: auto; padding: 45px 25px; min-height: 320px; }
-    .search { width: 100%; padding: 15px; border: 1px solid #c9b7a6; border-radius: 5px; font-size: 16px; }
+    .search, .filter { width: 100%; padding: 15px; border: 1px solid #c9b7a6; border-radius: 5px; font-size: 16px; background: white; }
+    .controls { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
     .notice { margin-top: 30px; padding: 25px; background: #f4ede4; border-left: 4px solid var(--gold); }
+    .record { margin-top: 20px; padding: 25px; background: white; border: 1px solid #e1d5ca; border-radius: 5px; }
+    .record h3 { margin: 10px 0; color: var(--burgundy); font-family: Georgia, serif; font-size: 23px; }
+    .record-id { font-size: 13px; font-weight: bold; color: #765b50; }
+    .record-meta { color: #665b54; font-size: 14px; }
+    .record a { color: var(--burgundy); }
+    .status { margin-top: 20px; color: #665b54; }
     footer { background: #30070d; color: white; padding: 30px 7%; font-size: 13px; }
     footer a { color: white; }
+    @media (max-width: 650px) {
+      .controls { grid-template-columns: 1fr; }
+      nav a { display: inline-block; margin-bottom: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -46,12 +57,24 @@
 
   <main>
     <h2>Explore the Archive</h2>
-    <input class="search" type="search" placeholder="Search sources, names, dates or archive IDs..." aria-label="Search archive" disabled>
+
+    <div class="controls">
+      <input id="search" class="search" type="search"
+        placeholder="Search sources, names, dates or archive IDs..."
+        aria-label="Search archive">
+
+      <select id="category" class="filter" aria-label="Research area">
+        <option value="">All research areas</option>
+      </select>
+    </div>
+
+    <p id="status" class="status" role="status">Loading archive records...</p>
+    <div id="results"></div>
 
     <div class="notice">
-      <h3>Archive in preparation</h3>
-      <p>Our digital source catalogue is being prepared for publication. Bibliographic records will be made available progressively.</p>
-      <p>Original documents will only be accessible where publication rights permit.</p>
+      <h3>About this archive</h3>
+      <p>This catalogue documents historical sources relating to hairdressing, permanent waving and professional technologies.</p>
+      <p>Bibliographic records are published progressively. Original documents are available only where publication rights permit.</p>
     </div>
   </main>
 
@@ -59,6 +82,143 @@
     International Hairdressing History Project · Independent Archival Research
     <p><a href="/">Return to homepage</a></p>
   </footer>
+
+  <script>
+    const search = document.getElementById("search");
+    const category = document.getElementById("category");
+    const results = document.getElementById("results");
+    const status = document.getElementById("status");
+
+    let records = [];
+
+    function makeElement(tag, text, className) {
+      const element = document.createElement(tag);
+      if (text !== undefined) element.textContent = text;
+      if (className) element.className = className;
+      return element;
+    }
+
+    function safeLink(url) {
+      try {
+        const parsed = new URL(url, window.location.href);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+          return parsed.href;
+        }
+      } catch (error) {}
+      return null;
+    }
+
+    function addLink(container, url, label) {
+      const href = safeLink(url);
+      if (!href) return;
+
+      const link = makeElement("a", label);
+      link.href = href;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      container.appendChild(link);
+    }
+
+    function render() {
+      results.replaceChildren();
+
+      const query = search.value.trim().toLocaleLowerCase();
+      const selected = category.value;
+
+      const filtered = records.filter(record => {
+        const categories = Array.isArray(record.categories)
+          ? record.categories : [];
+
+        const searchable = [
+          record.id,
+          record.title,
+          record.date,
+          record.source,
+          record.description,
+          ...categories
+        ].join(" ").toLocaleLowerCase();
+
+        return searchable.includes(query) &&
+          (!selected || categories.includes(selected));
+      });
+
+      status.textContent = filtered.length === 0
+        ? (records.length === 0
+            ? "The public archive catalogue is being prepared."
+            : "No matching records found.")
+        : filtered.length + " source record(s) found.";
+
+      for (const record of filtered) {
+        const article = makeElement("article", undefined, "record");
+
+        article.appendChild(makeElement("div", record.id || "", "record-id"));
+        article.appendChild(makeElement("h3", record.title || "Untitled source"));
+
+        const categories = Array.isArray(record.categories)
+          ? record.categories.join(", ") : "";
+
+        article.appendChild(makeElement(
+          "p",
+          [record.date, categories].filter(Boolean).join(" · "),
+          "record-meta"
+        ));
+
+        if (record.source) {
+          article.appendChild(makeElement("p", record.source));
+        }
+
+        if (record.description) {
+          article.appendChild(makeElement("p", record.description));
+        }
+
+        if (record.original_url) {
+          const paragraph = document.createElement("p");
+          addLink(paragraph, record.original_url, "Original source");
+          article.appendChild(paragraph);
+        }
+
+        if (record.pdf_url) {
+          const paragraph = document.createElement("p");
+          addLink(paragraph, record.pdf_url, "View document (PDF)");
+          article.appendChild(paragraph);
+        }
+
+        results.appendChild(article);
+      }
+    }
+
+    async function loadArchive() {
+      try {
+        const response = await fetch("./records.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Archive data unavailable");
+
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Invalid archive data");
+
+        records = data;
+
+        const categories = [...new Set(
+          records.flatMap(record =>
+            Array.isArray(record.categories) ? record.categories : []
+          )
+        )].sort();
+
+        for (const name of categories) {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          category.appendChild(option);
+        }
+
+        render();
+      } catch (error) {
+        status.textContent = "Archive records could not be loaded. Please try again later.";
+      }
+    }
+
+    search.addEventListener("input", render);
+    category.addEventListener("change", render);
+    loadArchive();
+  </script>
 </body>
 </html>
-
