@@ -1,11 +1,64 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Source Archive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Source Archive | International Hairdressing History Project</title>
+  <meta name="description" content="Explore historical sources on hairdressing, permanent waving, technologies and professional history.">
+  <style>
+    :root {
+      --burgundy: #5b1019;
+      --cream: #fffaf4;
+      --gold: #d4b386;
+      --ink: #28211e;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cream); color: var(--ink); font-family: Arial, sans-serif; }
+    header { padding: 30px 7%; background: var(--cream); }
+    .brand { color: var(--burgundy); font-family: Georgia, serif; font-size: 24px; font-weight: bold; }
+    nav { background: var(--burgundy); padding: 18px 7%; }
+    nav a { color: white; text-decoration: none; margin-right: 28px; font-size: 13px; }
+    .hero { background: linear-gradient(110deg, #30070d, #5b1019); color: white; padding: 75px 7%; }
+    .hero h1 { font-family: Georgia, serif; font-size: clamp(30px, 5vw, 48px); }
+    main { max-width: 1100px; margin: auto; padding: 45px 25px; min-height: 320px; }
+    .search { width: 100%; padding: 15px; border: 1px solid #c9b7a6; border-radius: 5px; font-size: 16px; }
+    .notice { margin-top: 30px; padding: 25px; background: #f4ede4; border-left: 4px solid var(--gold); }
+    footer { background: #30070d; color: white; padding: 30px 7%; font-size: 13px; }
+    footer a { color: white; }
+  </style>
 </head>
 <body>
-  <h1>International Hairdressing History Archive</h1>
-  <p>Archive under construction.</p>
+  <header>
+    <div class="brand">International Hairdressing History Project</div>
+    <p>Independent Archival Research Initiative</p>
+  </header>
+
+  <nav>
+    <a href="/">HOME</a>
+    <a href="/archiv/">SOURCE ARCHIVE</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Historical Source Archive</h1>
+    <p>Documents, publications and evidence from the history of hairdressing.</p>
+  </section>
+
+  <main>
+    <h2>Explore the Archive</h2>
+    <input class="search" type="search" placeholder="Search sources, names, dates or archive IDs..." aria-label="Search archive" disabled>
+
+    <div class="notice">
+      <h3>Archive in preparation</h3>
+      <p>Our digital source catalogue is being prepared for publication. Bibliographic records will be made available progressively.</p>
+      <p>Original documents will only be accessible where publication rights permit.</p>
+    </div>
+  </main>
+
+  <footer>
+    International Hairdressing History Project · Independent Archival Research
+    <p><a href="/">Return to homepage</a></p>
+  </footer>
 </body>
 </html>
+
