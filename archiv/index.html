@@ -29,6 +29,7 @@
     .record h3 { margin: 10px 0; color: var(--burgundy); font-family: Georgia, serif; font-size: 23px; }
     .record-id { font-size: 13px; font-weight: bold; color: #765b50; }
     .record-meta { color: #665b54; font-size: 14px; }
+    .original-title { color: #665b54; font-size: 14px; margin-top: 0; }
     .record a { color: var(--burgundy); }
     .status { margin-top: 20px; color: #665b54; }
     footer { background: #30070d; color: white; padding: 30px 7%; font-size: 13px; }
@@ -119,6 +120,30 @@
       container.appendChild(link);
     }
 
+    function englishDate(value) {
+      if (!value) return "";
+
+      const months = {
+        Januar: "January",
+        Februar: "February",
+        "März": "March",
+        April: "April",
+        Mai: "May",
+        Juni: "June",
+        Juli: "July",
+        August: "August",
+        September: "September",
+        Oktober: "October",
+        November: "November",
+        Dezember: "December"
+      };
+
+      return String(value).replace(
+        /\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\b/g,
+        month => months[month]
+      );
+    }
+
     function render() {
       results.replaceChildren();
 
@@ -132,9 +157,12 @@
         const searchable = [
           record.id,
           record.title,
+          record.original_title,
           record.date,
+          englishDate(record.date),
           record.source,
           record.description,
+          record.language,
           ...categories
         ].join(" ").toLocaleLowerCase();
 
@@ -154,17 +182,39 @@
         article.appendChild(makeElement("div", record.id || "", "record-id"));
         article.appendChild(makeElement("h3", record.title || "Untitled source"));
 
+        if (
+          record.original_title &&
+          record.original_title.trim() !== (record.title || "").trim()
+        ) {
+          article.appendChild(makeElement(
+            "p",
+            "Original title: " + record.original_title,
+            "original-title"
+          ));
+        }
+
         const categories = Array.isArray(record.categories)
           ? record.categories.join(", ") : "";
 
         article.appendChild(makeElement(
           "p",
-          [record.date, categories].filter(Boolean).join(" · "),
+          [englishDate(record.date), categories].filter(Boolean).join(" · "),
           "record-meta"
         ));
 
+        if (record.language && record.language !== "Not specified") {
+          article.appendChild(makeElement(
+            "p",
+            "Original language: " + record.language,
+            "record-meta"
+          ));
+        }
+
         if (record.source) {
-          article.appendChild(makeElement("p", record.source));
+          const paragraph = makeElement("p");
+          paragraph.appendChild(makeElement("strong", "Source: "));
+          paragraph.appendChild(document.createTextNode(record.source));
+          article.appendChild(paragraph);
         }
 
         if (record.description) {
@@ -196,6 +246,10 @@
         if (!Array.isArray(data)) throw new Error("Invalid archive data");
 
         records = data;
+
+        category.replaceChildren(
+          new Option("All research areas", "")
+        );
 
         const categories = [...new Set(
           records.flatMap(record =>
