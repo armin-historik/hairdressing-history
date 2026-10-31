@@ -1,2 +1,10 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://armin-historik.github.io/hairdressing-history/</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://hairdressing-history.org/</loc>
+  </url>
+  <url>
+    <loc>https://hairdressing-history.org/archiv/</loc>
+  </url>
+</urlset>
